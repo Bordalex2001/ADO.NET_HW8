@@ -1,0 +1,53 @@
+﻿<Window x:Class="ADO.NET_HW8.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ADO.NET_HW8"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Label Content="Автор:" Margin="10" Width="111"/>
+        <TextBox Grid.Column="1" x:Name="authorTxtBox" TextWrapping="Wrap" MinWidth="245" Margin="10" Height="20"/>
+        <Label Content="Назва:" Grid.Column="2" Margin="10" Width="111"/>
+        <TextBox x:Name="titleTxtBox" TextWrapping="Wrap" MinWidth="245" Grid.Column="3" Margin="10" Height="20"/>
+        <Label Content="Категорія:" Margin="10" Width="111" Grid.Row="1"/>
+        <TextBox x:Name="categoryTxtBox" TextWrapping="Wrap" MinWidth="245" Margin="10" Grid.Row="1" Grid.Column="1" Height="20"/>
+        <Label Content="Видавництво:" Grid.Column="2" Margin="10" Width="111" Grid.Row="1"/>
+        <TextBox x:Name="publisherTxtBox" TextWrapping="Wrap" MinWidth="245" Grid.Column="3" Margin="10" Grid.Row="1" Height="20"/>
+        <Label Content="Рік видання:" Margin="10" Width="111" Grid.Row="2"/>
+        <TextBox x:Name="yearTxtBox" TextWrapping="Wrap" MinWidth="245" Margin="10" Grid.Row="2" Grid.Column="1" Height="20"/>
+        <Label Content="Кількість сторінок:" Grid.Column="2" Margin="10" Width="111" Grid.Row="2"/>
+        <TextBox x:Name="pagesTxtBox" TextWrapping="Wrap" MinWidth="245" Grid.Column="3" Margin="10" Grid.Row="2" Height="20"/>
+        <StackPanel Grid.ColumnSpan="4" Orientation="Horizontal" Grid.Row="3" VerticalAlignment="Center" Margin="10" HorizontalAlignment="Center">
+            <Button x:Name="addBtn" Content="Додати" Width="150" Height="25" Click="addBtn_Click"/>
+            <Button x:Name="updateBtn" Content="Змінити" Margin="10,0,0,0" Width="150" Height="25" Click="updateBtn_Click"/>
+            <Button x:Name="deleteBtn" Content="Видалити" Margin="10,0,10,0" Width="150" Height="25" Click="deleteBtn_Click"/>
+            <Button x:Name="searchBtn" Content="Знайти" Width="150" Height="25" Click="searchBtn_Click"/>
+        </StackPanel>
+        <DataGrid x:Name="dataGridView" Grid.ColumnSpan="4" Grid.Row="4" MouseDoubleClick="dataGridView_MouseDoubleClick" Margin="10" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}" />
+                <DataGridTextColumn Header="Title" Binding="{Binding Title}" />
+                <DataGridTextColumn Header="AuthorId" Binding="{Binding AuthorId}" />
+                <DataGridTextColumn Header="CategoryId" Binding="{Binding CategoryId}" />
+                <DataGridTextColumn Header="PublisherId" Binding="{Binding PublisherId}" />
+                <DataGridTextColumn Header="Year" Binding="{Binding Year}" />
+                <DataGridTextColumn Header="Pages" Binding="{Binding Pages}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
