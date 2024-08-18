@@ -46,7 +46,12 @@ namespace ADO.NET_HW8
             publisherTxtBox.Clear();
             yearTxtBox.Clear();
             pagesTxtBox.Clear();
-            selectedBook.Id = 0;
+
+            if (selectedBook != null)
+            {
+                selectedBook.Id = 0;
+            }
+            
             deleteBtn.IsEnabled = false;
             updateBtn.IsEnabled = false;
             addBtn.IsEnabled = true;
@@ -76,7 +81,6 @@ namespace ADO.NET_HW8
                     return;
                 }
 
-                // Validate that year and pages are valid integers
                 else if (!int.TryParse(yearTxtBox.Text, out int year) || !int.TryParse(pagesTxtBox.Text, out int pages))
                 {
                     MessageBox.Show("Рік видання та кількість сторінок повинні бути цілими числами.", "Ой", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -115,7 +119,7 @@ namespace ADO.NET_HW8
                         Year = int.Parse(yearTxtBox.Text),
                         Pages = int.Parse(pagesTxtBox.Text)
                     };
-                    
+
                     db.Book.Add(book);
                     db.SaveChanges();
                 }
@@ -125,7 +129,7 @@ namespace ADO.NET_HW8
             }
             catch (Exception ex) 
             {
-                MessageBox.Show($"Помилка: {ex.Message}");
+                MessageBox.Show($"Помилка: {ex.Message}", "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
@@ -145,13 +149,16 @@ namespace ADO.NET_HW8
 
                 using (DBEntities db = new DBEntities())
                 {
-                    Book bookToUpdate = db.Book
+                    //Жадібне завантаження (Eager loading)
+                    /*Book bookToUpdate = db.Book
                         .Include(b => b.Authors)
                         .Include(b => b.Categories)
                         .Include(b => b.Publishers)
-                        .SingleOrDefault(b => b.Id == selectedBook.Id);
+                        .SingleOrDefault(b => b.Id == selectedBook.Id);*/ 
 
-                    
+                    //Ліниве завантаження (Lazy loading)
+                    Book bookToUpdate = db.Book.SingleOrDefault(b => b.Id == selectedBook.Id);
+
                     bookToUpdate.Title = titleTxtBox.Text;
                     bookToUpdate.Year = year;
                     bookToUpdate.Pages = pages;
@@ -188,7 +195,7 @@ namespace ADO.NET_HW8
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Помилка: {ex.Message}");
+                MessageBox.Show($"Помилка: {ex.Message}", "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
@@ -204,11 +211,15 @@ namespace ADO.NET_HW8
                 {
                     using (DBEntities db = new DBEntities())
                     {
-                        Book bookToDelete = db.Book
+                        //Жадібне завантаження (Eager loading)
+                        /*Book bookToDelete = db.Book
                                 .Include(b => b.Authors)
                                 .Include(b => b.Categories)
                                 .Include(b => b.Publishers)
-                                .SingleOrDefault(b => b.Id == selectedBook.Id);
+                                .SingleOrDefault(b => b.Id == selectedBook.Id);*/
+
+                        //Ліниве завантаження (Lazy loading)
+                        Book bookToDelete = db.Book.SingleOrDefault(b => b.Id == selectedBook.Id);
 
                         db.Book.Remove(bookToDelete);
                         db.SaveChanges();
@@ -219,8 +230,8 @@ namespace ADO.NET_HW8
                 }
             }
             catch (Exception ex) 
-            { 
-                MessageBox.Show($"Помилка: {ex.Message}"); 
+            {
+                MessageBox.Show($"Помилка: {ex.Message}", "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally 
             { 
@@ -242,11 +253,15 @@ namespace ADO.NET_HW8
 
                 using (DBEntities db = new DBEntities())
                 {
-                    IQueryable<Book> query = db.Book
+                    //Жадібне завантаження (Eager loading)
+                    /*IQueryable<Book> query = db.Book
                         .Include(b => b.Authors)
                         .Include(b => b.Categories)
                         .Include(b => b.Publishers)
-                        .AsQueryable();
+                        .AsQueryable();*/
+
+                    //Ліниве завантаження (Lazy Loading)
+                    IQueryable<Book> query = db.Book.AsQueryable();
 
                     if (!string.IsNullOrEmpty(title))
                         query = query.Where(b => b.Title.Contains(title));
@@ -263,13 +278,22 @@ namespace ADO.NET_HW8
                     if (year.HasValue)
                         query = query.Where(b => b.Year == year.Value);
 
-                    List<Book> searchResults = query.ToList();
-                    dataGridView.ItemsSource = searchResults;
+                    List<Book> books = query.ToList();
+
+                    //Явне завантаження (Explicit loading)
+                    foreach (Book book in books)
+                    {
+                        db.Entry(book).Reference(b => b.Authors).Load();
+                        db.Entry(book).Reference(b => b.Categories).Load();
+                        db.Entry(book).Reference(b => b.Publishers).Load();
+                    }
+
+                    dataGridView.ItemsSource = books;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Помилка: {ex.Message}");
+                MessageBox.Show($"Помилка: {ex.Message}", "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -281,19 +305,27 @@ namespace ADO.NET_HW8
                 {
                     using (var db = new DBEntities())
                     {
-                        // Загрузка книги с учетом связанных сущностей
-                        selectedBook = db.Book
+                        //Жадібне завантаження (Eager loading)
+                        /*selectedBook = db.Book
                                      .Include(b => b.Authors)
                                      .Include(b => b.Categories)
                                      .Include(b => b.Publishers)
-                                     .SingleOrDefault(b => b.Id == book.Id);
+                                     .SingleOrDefault(b => b.Id == book.Id);*/
+
+                        //Ліниве завантаження (Lazy Loading)
+                        selectedBook = db.Book.SingleOrDefault(b => b.Id == book.Id);
 
                         if (selectedBook != null)
                         {
+                            //Явне завантаження (Explicit Loading)
+                            db.Entry(selectedBook).Reference(b => b.Authors).Load();
+                            db.Entry(selectedBook).Reference(b => b.Categories).Load();
+                            db.Entry(selectedBook).Reference(b => b.Publishers).Load();
+                            
                             titleTxtBox.Text = selectedBook.Title;
-                            authorTxtBox.Text = selectedBook.Authors?.FullName;
-                            categoryTxtBox.Text = selectedBook.Categories?.Name;
-                            publisherTxtBox.Text = selectedBook.Publishers?.Name;
+                            authorTxtBox.Text = selectedBook.Authors.FullName;
+                            categoryTxtBox.Text = selectedBook.Categories.Name;
+                            publisherTxtBox.Text = selectedBook.Publishers.Name;
                             yearTxtBox.Text = selectedBook.Year.ToString();
                             pagesTxtBox.Text = selectedBook.Pages.ToString();
 
@@ -307,7 +339,7 @@ namespace ADO.NET_HW8
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Помилка: {ex.Message}");
+                MessageBox.Show($"Помилка: {ex.Message}", "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

@@ -4,14 +4,14 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="f7a8f6134598460bb5c86ec35f0e0548" Name="Diagram1">
+      <Diagram DiagramId="740bfd18fa43457c85d9147bf7466b5f" Name="Diagram1">
         <EntityTypeShape EntityType="DBModel.Author" Width="1.5" PointX="0.75" PointY="1.625" IsExpanded="true" />
         <EntityTypeShape EntityType="DBModel.Book" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="DBModel.Category" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="DBModel.Publisher" Width="1.5" PointX="0.75" PointY="7.125" IsExpanded="true" />
-        <AssociationConnector Association="DBModel.FK__Books__AuthorId__4E88ABD4" ManuallyRouted="false" />
-        <AssociationConnector Association="DBModel.FK__Books__CategoryI__4F7CD00D" ManuallyRouted="false" />
-        <AssociationConnector Association="DBModel.FK__Books__Publisher__5070F446" ManuallyRouted="false" />
+        <AssociationConnector Association="DBModel.FK__Books__AuthorId__06CD04F7" ManuallyRouted="false" />
+        <AssociationConnector Association="DBModel.FK__Books__CategoryI__07C12930" ManuallyRouted="false" />
+        <AssociationConnector Association="DBModel.FK__Books__Publisher__08B54D69" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
